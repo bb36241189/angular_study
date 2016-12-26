@@ -1,0 +1,8 @@
+<div class="pg pg-ngTable">
+    <table ng-table="vm.images" class="table" show-filter="true">
+        <tr ng-repeat="image in $data">
+            <td title="'id'" filter="{id : 'text'}" sortable="'id'">{{image.id}}</td>
+            <td title="'name'" filter="{name : 'text'}" sortable="'name'">{{image.name}}</td>
+        </tr>
+    </table>
+</div>

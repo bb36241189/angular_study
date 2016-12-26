@@ -44,10 +44,10 @@ var lintScripts = lazypipe()
   .pipe($.jshint.reporter, 'jshint-stylish');
 
 var styles = lazypipe()
-  .pipe($.sass, {
-    outputStyle: 'expanded',
-    precision: 10
-  })
+  //.pipe($.sass, {
+  //  outputStyle: 'expanded',
+  //  precision: 10
+  //})
   .pipe($.autoprefixer, 'last 1 version')
   .pipe(gulp.dest, '.tmp/styles');
 
@@ -143,7 +143,7 @@ gulp.task('bower', function () {
       directory: yeoman.app + '/bower_components',
       ignorePath: '..'
     }))
-  .pipe(gulp.dest(yeoman.app + '/views'));
+  .pipe(gulp.dest(yeoman.app ));
 });
 
 ///////////

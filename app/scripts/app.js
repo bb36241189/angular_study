@@ -13,18 +13,24 @@ angular
     'ngAnimate',
     'ngCookies',
     'ngResource',
-    'ngRoute',
+    'ui.router',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'ngTable'
   ])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl',
-        controllerAs: 'main'
-      })
-      .otherwise({
-        redirectTo: '/'
-      });
-  });
+  .config(['$stateProvider','$urlRouterProvider',function ($stateProvider,$urlRouterProvider) {
+       $urlRouterProvider.otherwise("/main");
+      $stateProvider
+        .state('main', {
+          url : '/main',
+          templateUrl: 'views/main.html',
+          controller: 'MainCtrl',
+          controllerAs: 'main'
+        })
+          .state('ngTable',{
+            url : '/ngTable',
+            templateUrl : 'views/ng-table.html',
+            controller : 'TestNgTableController',
+            controllerAs : 'TestNgTable'
+          });
+  }]);
