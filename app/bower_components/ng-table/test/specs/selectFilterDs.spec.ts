@@ -1,26 +1,26 @@
 import { ICompileService, IScope, ITimeoutService } from 'angular';
 import * as ng1 from 'angular';
-import { SelectData, ISelectOption, ngTableBrowserModule } from '../src/browser';
+import { SelectData, SelectOption, ngTableBrowserModule } from '../../src/browser';
 
 describe('ngTableSelectFilterDs directive', () => {
 
-    interface IColumnScope extends IScope {
-        $column?: { data?: SelectData };
-        $selectData?: ISelectOption[];
+    interface ColumnScope extends IScope {
+        $column: { data?: SelectData };
+        $selectData?: SelectOption[];
     }
 
-    interface ITableScope extends IScope {
-        $new(): IColumnScope;
+    interface TableScope extends IScope {
+        $new(): ColumnScope;
     }
 
-    let $scope: IColumnScope,
+    let $scope: ColumnScope,
         elem: string,
         $compile: ICompileService;
 
     beforeAll(() => expect(ngTableBrowserModule).toBeDefined());
     beforeEach(ng1.mock.module('ngTable-browser'));
 
-    beforeEach(inject(($rootScope: ITableScope, _$compile_: ICompileService) => {
+    beforeEach(inject(($rootScope: TableScope, _$compile_: ICompileService) => {
         $scope = $rootScope.$new();
         $compile = _$compile_;
         elem = '<select ng-table-select-filter-ds="$column"></select>';
@@ -41,10 +41,10 @@ describe('ngTableSelectFilterDs directive', () => {
             expect($scope.$selectData).toBe(data);
         });
 
-        it('should turn null/undefined array into empty array', () => {
+        it('should turn undefined array into empty array', () => {
             // given
             $scope.$column = {
-                data: null
+                data: undefined
             };
             // when
             $compile(elem)($scope);
@@ -56,7 +56,7 @@ describe('ngTableSelectFilterDs directive', () => {
         it('should keep the array on scope in sync with data array on $column', () => {
             // given
             $scope.$column = {
-                data: null
+                data: undefined
             };
             $compile(elem)($scope);
             $scope.$digest();
@@ -92,7 +92,7 @@ describe('ngTableSelectFilterDs directive', () => {
             // allow for the user to select an empty select option thus removing column filter
 
             // given
-            let data: ISelectOption[] = [];
+            let data: SelectOption[] = [];
             $scope.$column = {
                 data: data
             };
@@ -137,7 +137,7 @@ describe('ngTableSelectFilterDs directive', () => {
 
     describe('function datasource', () => {
 
-        let data: ISelectOption[];
+        let data: SelectOption[] | undefined;
         beforeEach(() => {
             $scope.$column = {
                 data: () => data
@@ -154,9 +154,9 @@ describe('ngTableSelectFilterDs directive', () => {
             expect($scope.$selectData).toBe(data);
         });
 
-        it('should turn null/undefined array into empty array', () => {
+        it('should turn undefined array into empty array', () => {
             // given
-            data = null;
+            data = undefined;
             // when
             $compile(elem)($scope);
             $scope.$digest();
@@ -229,7 +229,7 @@ describe('ngTableSelectFilterDs directive', () => {
     });
 
     describe('asyn function datasource', () => {
-        let data: ISelectOption[];
+        let data: SelectOption[] | undefined;
         let $timeout: ITimeoutService;
         beforeEach(inject((_$timeout_: ITimeoutService) => {
             $timeout = _$timeout_;
@@ -249,9 +249,9 @@ describe('ngTableSelectFilterDs directive', () => {
             expect($scope.$selectData).toBe(data);
         });
 
-        it('should turn null/undefined array into empty array', () => {
+        it('should turn undefined array into empty array', () => {
             // given
-            data = null;
+            data = undefined;
             // when
             $compile(elem)($scope);
             $scope.$digest();

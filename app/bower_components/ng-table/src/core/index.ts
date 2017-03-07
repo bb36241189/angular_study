@@ -1,8 +1,8 @@
 import * as angular from 'angular';
-import { NgTableDefaultGetDataProvider, IDefaultGetData } from './data';
-import { IGroupSettings, ngTableDefaultGetGroups } from './grouping';
-import { ngTableDefaults, IDefaults } from './ngTableDefaults';
-import { NgTableSettings, ISettings } from './ngTableSettings';
+import { NgTableDefaultGetDataProvider, DefaultGetData } from './data';
+import { GroupSettingsPartial, ngTableDefaultGetGroups } from './grouping';
+import { ngTableDefaults, Defaults } from './ngTableDefaults';
+import { SettingsPartial, Settings } from './ngTableSettings';
 import { NgTableParams } from './ngTableParams';
 import { NgTableEventsChannel } from './ngTableEventsChannel';
 
@@ -11,7 +11,7 @@ const ngTableCoreModule = angular.module('ngTable-core', [])
     .factory('ngTableDefaultGetGroups', ngTableDefaultGetGroups)
     .value('ngTableDefaults',ngTableDefaults)
     .service('ngTableEventsChannel', NgTableEventsChannel)
-    .service('ngTableSettings', NgTableSettings)
+    .run(Settings.init)
     .run(NgTableParams.init);
 
 // note: if you are using ES6 or typescript prefer:
@@ -20,9 +20,9 @@ ngTableCoreModule.value('NgTableParams', NgTableParams)
 
 export { ngTableCoreModule };
 
-export { IDefaults } from './ngTableDefaults';
+export { Defaults } from './ngTableDefaults';
 export * from './ngTableEventsChannel';
-export { ISettings } from './ngTableSettings';
+export { SettingsPartial, Settings };
 export * from './ngTableParams';
 export * from './data';
 export * from './filtering';

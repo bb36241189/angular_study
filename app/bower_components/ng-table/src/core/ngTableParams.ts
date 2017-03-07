@@ -7,16 +7,17 @@
  */
 
 import * as ng1 from 'angular';
-import { IPromise } from 'angular';
+import { ILogService, IPromise, IQService } from 'angular';
 import { convertSortToOrderBy, isGroupingFun } from './util';
-import { IDefaults } from './ngTableDefaults'
+import { assignPartialDeep } from '../shared';
+import { Defaults } from './ngTableDefaults'
 import { NgTableEventsChannel } from './ngTableEventsChannel'
-import { NgTableSettings, ISettings } from './ngTableSettings'
-import { DataResult, IDataRowGroup, IGetDataFunc } from './data';
-import { IFilterValues } from './filtering';
-import { IGetGroupFunc, Grouping, IGroupingFunc, GroupSort, IGroupValues } from './grouping';
-import { SortDirection, ISortingValues } from './sorting';
-import { IPageButton } from './paging';
+import { SettingsPartial, Settings } from './ngTableSettings'
+import { DataResult, DataRowGroup, GetDataFunc } from './data';
+import { FilterValues } from './filtering';
+import { GetGroupFunc, Grouping, GroupingPartial, GroupValuesPartial, GroupingFunc, GroupSort, GroupValues } from './grouping';
+import { SortDirection, SortingValues } from './sorting';
+import { PageButton } from './paging';
 
 /**
  * @private
@@ -25,31 +26,38 @@ export interface InternalTableParams<T> extends NgTableParams<T> {
     isNullInstance: boolean
 }
 
+
+export type ParamValuesPartial<T> =
+    Partial<Pick<ParamValues<T>, 'page' | 'count' | 'filter' | 'sorting'>>
+    & {
+        group?: string | GroupingPartial<T>
+    };
+
 /**
  * The runtime values for {@link NgTableParams} that determine the set of data rows and
  * how they are to be displayed in a table
  */
-export interface IParamValues<T> {
+export class ParamValues<T> {
     /**
      * The index of the "slice" of data rows, starting at 1, to be displayed by the table.
      */
-    page?: number;
+    page = 1;
     /**
      * The number of data rows per page
      */
-    count?: number;
+    count = 10;
     /**
      * The filter that should be applied to restrict the set of data rows
      */
-    filter?: IFilterValues;
+    filter: FilterValues = {};
     /**
      * The sort order that should be applied to the data rows.
      */
-    sorting?: ISortingValues;
+    sorting: SortingValues = {};
     /**
      * The grouping that should be applied to the data rows
      */
-    group?: string | Grouping<T>;
+    group: string | Grouping<T> = {};
 }
 
 
@@ -64,7 +72,7 @@ function isNumber(n: any) {
  * @private
  */
 type Memento<T> = {
-    params: IParamValues<T>;
+    params: ParamValues<T>;
     groupSortDirection?: string;
 };
 
@@ -77,21 +85,19 @@ export class NgTableParams<T> {
      */
     data: T[] = [];
     reloadPages: () => void;
-    private defaultSettings = NgTableParams.ngTableSettings.createDefaults<T>();
-    private errParamsMemento: Memento<T>;
+    private defaultSettings = Settings.createWithOverrides<T>();
+    private errParamsMemento: Memento<T> | null;
     private isCommittedDataset = false;
     isNullInstance: boolean;
-    private initialEvents: Function[] = [];
+    private initialEvents: Function[] | null = [];
+    private ngTableDefaults: Defaults
+    private ngTableEventsChannel: NgTableEventsChannel;
     private prevParamsMemento: Memento<T>;
-    private _params: IParamValues<T> = {
-        page: 1,
-        count: 10,
-        filter: {},
-        sorting: {},
-        group: {}
-    };
+    private _params = new ParamValues<T>();
     private _settings = this.defaultSettings;
-    constructor(baseParameters?: IParamValues<T> | boolean, baseSettings?: ISettings<T>) {
+    private $q: IQService;
+    private $log: ILogService
+    constructor(baseParameters: ParamValuesPartial<T> | boolean = {}, baseSettings: SettingsPartial<T> = {}) {
 
         // the ngTableController "needs" to create a dummy/null instance and it's important to know whether an instance
         // is one of these
@@ -100,23 +106,23 @@ export class NgTableParams<T> {
         }
 
         this.reloadPages = (() => {
-            let currentPages: IPageButton[];
+            let currentPages: PageButton[];
             return () => {
                 const oldPages = currentPages;
                 const newPages = this.generatePagesArray(this.page(), this.total(), this.count());
                 if (!ng1.equals(oldPages, newPages)) {
                     currentPages = newPages;
-                    NgTableParams.ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
+                    this.ngTableEventsChannel.publishPagesChanged(this, newPages, oldPages);
                 }
             }
         })();
 
-        ng1.extend(this._params, NgTableParams.ngTableDefaults.params);
+        assignPartialDeep(this._params, this.ngTableDefaults.params);
 
         this.settings(baseSettings);
         this.parameters(baseParameters, true);
 
-        NgTableParams.ngTableEventsChannel.publishAfterCreated(this);
+        this.ngTableEventsChannel.publishAfterCreated(this);
         // run events during construction after the initial create event. That way a consumer
         // can subscribe to all events for a table without "dropping" an event
         ng1.forEach(this.initialEvents, event => {
@@ -145,13 +151,13 @@ export class NgTableParams<T> {
      * @param trim supply true to return the current filter minus any insignificant values
      * (null,  undefined and empty string)
      */
-    filter(trim?: boolean): IFilterValues
+    filter(trim?: boolean): FilterValues
     /**
      * Sets filter values to the `filter` supplied; any existing filter will be removed
      * Changes to filter will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
      */
-    filter(filter: IFilterValues): this
-    filter(filter?: IFilterValues | boolean) {
+    filter(filter: FilterValues): this
+    filter(filter?: FilterValues | boolean) {
         if (filter != null && typeof filter === 'object') {
             return this.parameters({
                 'filter': filter,
@@ -159,7 +165,7 @@ export class NgTableParams<T> {
             });
         } else if (filter === true) {
             const keys = Object.keys(this._params.filter);
-            const significantFilter: IFilterValues = {};
+            const significantFilter: FilterValues = {};
             for (let i = 0; i < keys.length; i++) {
                 const filterValue = this._params.filter[keys[i]];
                 if (filterValue != null && filterValue !== '') {
@@ -190,7 +196,7 @@ export class NgTableParams<T> {
         let maxPage: number, maxPivotPages: number, minPage: number, numPages: number;
         maxBlocks = maxBlocks && maxBlocks < 6 ? 6 : maxBlocks;
 
-        const pages: IPageButton[] = [];
+        const pages: PageButton[] = [];
         numPages = Math.ceil(totalItems / pageSize);
         if (numPages > 1) {
             pages.push({
@@ -247,7 +253,7 @@ export class NgTableParams<T> {
      * Sets grouping to the `group` supplied; any existing grouping will be removed.
      * Changes to group will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
      */
-    group(group: IGroupValues): this
+    group(group: GroupValuesPartial): this
     /**
      * Sets grouping to the `field` and `sortDirection` supplied; any existing grouping will be removed
      * Changes to group will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
@@ -258,13 +264,13 @@ export class NgTableParams<T> {
      * If `sortDirection` is supplied, this will be assigned to the sortDirection property of `group`
      * Changes to group will cause `isDataReloadRequired` to return true and the current `page` to be set to 1
      */
-    group(group: IGroupingFunc<T> | string, sortDirection?: GroupSort): this
-    group(group?: Grouping<T> | string, sortDirection?: GroupSort): string | Grouping<T> | this {
+    group(group: GroupingFunc<T> | string, sortDirection?: GroupSort): this
+    group(group?: GroupingPartial<T> | string, sortDirection?: GroupSort): string | Grouping<T> | this {
         if (group === undefined) {
             return this._params.group;
         }
 
-        const newParameters: IParamValues<T> = {
+        const newParameters: ParamValuesPartial<T> = {
             page: 1
         };
         if (isGroupingFun(group) && sortDirection !== undefined) {
@@ -308,8 +314,8 @@ export class NgTableParams<T> {
     /**
      * Returns true when the `group` and when supplied, the `sortDirection` matches an existing group
      */
-    hasGroup(group: string | IGroupingFunc<T>, sortDirection?: string): boolean
-    hasGroup(group?: string | IGroupingFunc<T>, sortDirection?: string) {
+    hasGroup(group: string | GroupingFunc<T>, sortDirection?: string): boolean
+    hasGroup(group?: string | GroupingFunc<T>, sortDirection?: string) {
         if (group == null) {
             return isGroupingFun(this._params.group) || Object.keys(this._params.group).length > 0
         }
@@ -324,7 +330,7 @@ export class NgTableParams<T> {
             if (sortDirection == null) {
                 return Object.keys(this._params.group).indexOf(group) !== -1;
             } else {
-                return (this._params.group as IGroupValues)[group] === sortDirection;
+                return (this._params.group as GroupValues)[group] === sortDirection;
             }
         }
     }
@@ -374,49 +380,55 @@ export class NgTableParams<T> {
             'page': page
         }) : this._params.page;
     }
-    parameters(): IParamValues<T>
+    parameters(): ParamValues<T>
     /**
      * Set new parameters
      */
-    parameters(newParameters?: IParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): this
-    parameters(newParameters?: IParamValues<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): IParamValues<T> | this {
+    parameters(newParameters?: ParamValuesPartial<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): this
+    parameters(newParameters?: ParamValuesPartial<T> | { [name: string]: string }, parseParamsFromUrl?: boolean): ParamValues<T> | this {
+        if (newParameters === undefined) {
+            return this._params;
+        }
+
+        // todo: move parsing of url like parameters into a seperate method
+
         parseParamsFromUrl = parseParamsFromUrl || false;
-        if (typeof newParameters !== undefined) {
-            for (const key in newParameters) {
-                let value = newParameters[key];
-                if (parseParamsFromUrl && key.indexOf('[') >= 0) {
-                    const keys = key.split(/\[(.*)\]/).reverse()
-                    let lastKey = '';
-                    for (let i = 0, len = keys.length; i < len; i++) {
-                        const name = keys[i];
-                        if (name !== '') {
-                            const v = value;
-                            value = {};
-                            value[lastKey = name] = (isNumber(v) ? parseFloat(v) : v);
-                        }
-                    }
-                    if (lastKey === 'sorting') {
-                        this._params[lastKey] = {};
-                    }
-                    this._params[lastKey] = ng1.extend(this._params[lastKey] || {}, value[lastKey]);
-                } else {
-                    if (key === 'group') {
-                        this._params[key] = this.parseGroup(newParameters[key]);
-                    } else {
-                        this._params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
+        for (const key in newParameters) {
+            let value = newParameters[key];
+            if (parseParamsFromUrl && key.indexOf('[') >= 0) {
+                const keys = key.split(/\[(.*)\]/).reverse()
+                let lastKey = '';
+                for (let i = 0, len = keys.length; i < len; i++) {
+                    const name = keys[i];
+                    if (name !== '') {
+                        const v = value;
+                        value = {};
+                        value[lastKey = name] = (isNumber(v) ? parseFloat(v) : v);
                     }
                 }
+                if (lastKey === 'sorting') {
+                    this._params[lastKey] = {};
+                }
+                this._params[lastKey] = ng1.extend(this._params[lastKey] || {}, value[lastKey]);
+            } else {
+                if (newParameters[key] === undefined) {
+                    // skip
+                }
+                else if (key === 'group') {
+                    this._params[key] = this.parseGroup(newParameters[key]);
+                } else {
+                    this._params[key] = (isNumber(newParameters[key]) ? parseFloat(newParameters[key]) : newParameters[key]);
+                }
             }
-            this.log('ngTable: set parameters', this._params);
-            return this;
         }
-        return this._params;
+        this.log('ngTable: set parameters', this._params);
+        return this;
     }
     /**
      * Trigger a reload of the data rows
      */
     reload<TResult extends DataResult<T>>(): IPromise<TResult[]> {
-        let pData: ng1.IPromise<any> = null;
+        let pData: ng1.IPromise<any>;
 
         this._settings.$loading = true;
 
@@ -424,10 +436,10 @@ export class NgTableParams<T> {
         this.isCommittedDataset = true;
 
         if (this.hasGroup()) {
-            pData = this.runInterceptorPipeline(NgTableParams.$q.when(this._settings.getGroups(this)));
+            pData = this.runInterceptorPipeline(this.$q.when(this._settings.getGroups(this)));
         } else {
-            const fn = this._settings.getData as IGetDataFunc<T>;
-            pData = this.runInterceptorPipeline(NgTableParams.$q.when(fn(this)));
+            const fn = this._settings.getData as GetDataFunc<T>;
+            pData = this.runInterceptorPipeline(this.$q.when(fn(this)));
         }
 
         this.log('ngTable: reload data');
@@ -440,75 +452,75 @@ export class NgTableParams<T> {
             this.data = data;
             // note: I think it makes sense to publish this event even when data === oldData
             // subscribers can always set a filter to only receive the event when data !== oldData
-            NgTableParams.ngTableEventsChannel.publishAfterReloadData(this, data, oldData);
+            this.ngTableEventsChannel.publishAfterReloadData(this, data, oldData);
             this.reloadPages();
 
             return data;
         }).catch(reason => {
             this.errParamsMemento = this.prevParamsMemento;
             // "rethrow"
-            return NgTableParams.$q.reject(reason);
+            return this.$q.reject(reason);
         });
     }
     /**
      * Returns the settings for the table.
      */
-    settings(): ISettings<T>
+    settings(): Settings<T>
     /**
      * Sets the settings for the table; new setting values will be merged with the existing settings.
      * Supplying a new `dataset` will cause `isDataReloadRequired` to return true and the `ngTableEventsChannel`
      * to fire its `datasetChanged` event
      */
-    settings(newSettings: ISettings<T>): this
-    settings(newSettings?: ISettings<T>): this | ISettings<T> {
-        if (ng1.isDefined(newSettings)) {
-
-            const settings = NgTableParams.ngTableSettings.merge(this._settings, newSettings);
-
-            const originalDataset = this._settings.dataset;
-            this._settings = settings;
-
-            // note: using != as want null and undefined to be treated the same
-            const hasDatasetChanged = newSettings.hasOwnProperty('dataset') && (newSettings.dataset != originalDataset);
-            if (hasDatasetChanged) {
-                if (this.isCommittedDataset) {
-                    this.page(1); // reset page as a new dataset has been supplied
-                }
-                this.isCommittedDataset = false;
-
-                const fireEvent = () => {
-                    NgTableParams.ngTableEventsChannel.publishDatasetChanged(this, newSettings.dataset, originalDataset);
-                };
-
-                if (this.initialEvents) {
-                    this.initialEvents.push(fireEvent);
-                } else {
-                    fireEvent();
-                }
-            }
-            this.log('ngTable: set settings', this._settings);
-            return this;
+    settings(newSettings: SettingsPartial<T>): this
+    settings(newSettings?: SettingsPartial<T>): this | Settings<T> {
+        if (newSettings === undefined) {
+            return this._settings;
         }
-        return this._settings;
+
+        const settings = Settings.merge(this._settings, newSettings);
+
+        const originalDataset = this._settings.dataset;
+        this._settings = settings;
+
+        // note: using != as want null and undefined to be treated the same
+        const hasDatasetChanged = newSettings.hasOwnProperty('dataset') && (newSettings.dataset != originalDataset);
+        if (hasDatasetChanged) {
+            if (this.isCommittedDataset) {
+                this.page(1); // reset page as a new dataset has been supplied
+            }
+            this.isCommittedDataset = false;
+
+            const fireEvent = () => {
+                this.ngTableEventsChannel.publishDatasetChanged(this, newSettings.dataset, originalDataset);
+            };
+
+            if (this.initialEvents) {
+                this.initialEvents.push(fireEvent);
+            } else {
+                fireEvent();
+            }
+        }
+        this.log('ngTable: set settings', this._settings);
+        return this;
     }
     /**
      * Returns the current sorting used to order the data rows.
      * Changes to sorting will cause `isDataReloadRequired` to return true
      */
-    sorting(): ISortingValues
+    sorting(): SortingValues
     /**
      * Sets sorting values to the `sorting` supplied; any existing sorting will be removed.
      * Changes to sorting will cause `isDataReloadRequired` to return true
      */
-    sorting(sorting: ISortingValues): this
+    sorting(sorting: SortingValues): this
     /**
      * Sets sorting to the `field` and `direction` supplied; any existing sorting will be removed
      */
-    sorting(field: string, direction: string): this
-    sorting(sorting?: ISortingValues | string, direction?: SortDirection) {
+    sorting(field: string, direction?: string): this
+    sorting(sorting?: SortingValues | string, direction?: SortDirection) {
         if (typeof sorting === 'string') {
             this.parameters({
-                'sorting': { [sorting]: direction }
+                'sorting': { [sorting]: direction || this.settings().defaultSort }
             });
             return this;
         }
@@ -545,9 +557,7 @@ export class NgTableParams<T> {
      * true for the parameters to be returned as an array of strings of the form 'paramName=value'
      * otherwise parameters returned as a key-value object
      */
-    url(asString?: boolean) {
-        // this function is an example of Typescript gone bad!!
-        asString = asString || false;
+    url(asString = false) {
         const pairs: any[] | { [name: string]: string } = (asString ? [] : {});
         for (const key in this._params) {
             if (this._params.hasOwnProperty(key)) {
@@ -597,12 +607,12 @@ export class NgTableParams<T> {
         return !ng1.equals(currentVal, previousVal);
     }
     private log(...args: any[]) {
-        if (this._settings.debugMode && NgTableParams.$log.debug) {
-            NgTableParams.$log.debug(...args);
+        if (this._settings.debugMode && this.$log.debug) {
+            this.$log.debug(...args);
         }
     }
     private parseGroup(group: string | Grouping<T>) {
-        const defaultSort = this._settings.groupOptions && this._settings.groupOptions.defaultSort;
+        const defaultSort = this._settings.groupOptions.defaultSort;
         if (!group) {
             return group;
         } else if (isGroupingFun(group)) {
@@ -623,12 +633,10 @@ export class NgTableParams<T> {
             };
         }
     }
-    private runInterceptorPipeline(fetchedData: ng1.IPromise<any>) {
-        const interceptors = this._settings.interceptors || [];
-
-        return interceptors.reduce((result, interceptor) => {
-            const thenFn = (interceptor.response && interceptor.response.bind(interceptor)) || NgTableParams.$q.when;
-            const rejectFn = (interceptor.responseError && interceptor.responseError.bind(interceptor)) || NgTableParams.$q.reject;
+    private runInterceptorPipeline(fetchedData: IPromise<any>) {
+        return this._settings.interceptors.reduce((result, interceptor) => {
+            const thenFn = (interceptor.response && interceptor.response.bind(interceptor)) || this.$q.when;
+            const rejectFn = (interceptor.responseError && interceptor.responseError.bind(interceptor)) || this.$q.reject;
             return result.then(data => {
                 return thenFn(data, this);
             }, reason => {
@@ -637,23 +645,15 @@ export class NgTableParams<T> {
         }, fetchedData);
     }
 
-    private static $q: ng1.IQService;
-    private static $log: ng1.ILogService;
-    private static ngTableDefaults: IDefaults;
-    private static ngTableEventsChannel: NgTableEventsChannel;
-    private static ngTableSettings: NgTableSettings;
     static init(
-        $q: ng1.IQService,
-        $log: ng1.ILogService,
-        ngTableDefaults: IDefaults,
-        ngTableEventsChannel: NgTableEventsChannel,
-        ngTableSettings: NgTableSettings) {
-        NgTableParams.$q = $q;
-        NgTableParams.$log = $log;
-        NgTableParams.ngTableDefaults = ngTableDefaults;
-        NgTableParams.ngTableEventsChannel = ngTableEventsChannel;
-        NgTableParams.ngTableSettings = ngTableSettings;
+        $q: IQService,
+        $log: ILogService,
+        ngTableDefaults: Defaults,
+        ngTableEventsChannel: NgTableEventsChannel) {
+        ng1.extend(NgTableParams.prototype, {
+            $q, $log, ngTableDefaults, ngTableEventsChannel
+        });
     }
 }
 
-NgTableParams.init.$inject = ['$q', '$log', 'ngTableDefaults', 'ngTableEventsChannel', 'ngTableSettings'];
+NgTableParams.init.$inject = ['$q', '$log', 'ngTableDefaults', 'ngTableEventsChannel'];

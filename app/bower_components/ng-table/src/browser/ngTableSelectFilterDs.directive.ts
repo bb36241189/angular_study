@@ -6,21 +6,21 @@
  * @license New BSD License <http://creativecommons.org/licenses/BSD/>
  */
 
-import * as ng1 from 'angular';
-import { IColumnDef, SelectData, ISelectDataFunc, ISelectOption } from './public-interfaces';
+import { IAttributes, IDirective, IParseService, IQService, IPromise, IScope } from 'angular';
+import { ColumnDef, SelectData, SelectDataFunc, SelectOption } from './public-interfaces';
 
 /**
  * @private
  */
-export interface IInputAttributes extends ng1.IAttributes {
+export interface InputAttributes extends IAttributes {
     ngTableSelectFilterDs: string;
 }
 
 /**
  * @private
  */
-export interface IScopeExtensions {
-    $selectData: ISelectOption[]
+export interface ScopeExtensions {
+    $selectData: SelectOption[]
 }
 
 ngTableSelectFilterDs.$inject = [];
@@ -33,7 +33,7 @@ ngTableSelectFilterDs.$inject = [];
  *
  * This directive is is focused on providing a datasource to an `ngOptions` directive
  */
-function ngTableSelectFilterDs(): ng1.IDirective {
+function ngTableSelectFilterDs(): IDirective {
     // note: not using isolated or child scope "by design"
     // this is to allow this directive to be combined with other directives that do
 
@@ -49,15 +49,15 @@ function ngTableSelectFilterDs(): ng1.IDirective {
  */
 export class NgTableSelectFilterDsController {
     static $inject = ['$scope', '$parse', '$attrs', '$q'];
-    $column: IColumnDef;
+    $column: ColumnDef;
     constructor(
-        private $scope: ng1.IScope & IScopeExtensions,
-        $parse: ng1.IParseService,
-        private $attrs: IInputAttributes,
-        private $q: ng1.IQService) {
+        private $scope: IScope & ScopeExtensions,
+        $parse: IParseService,
+        private $attrs: InputAttributes,
+        private $q: IQService) {
 
         this.$column = $parse($attrs.ngTableSelectFilterDs)($scope);
-        $scope.$watch<SelectData>(
+        $scope.$watch<SelectData | undefined>(
             () => this.$column && this.$column.data,
             () => { this.bindDataSource(); });
     }
@@ -71,8 +71,8 @@ export class NgTableSelectFilterDsController {
         });
     }
 
-    private hasEmptyOption(data: ISelectOption[]) {
-        let isMatch: boolean;
+    private hasEmptyOption(data: SelectOption[]) {
+        let isMatch = false;
         for (let i = 0; i < data.length; i++) {
             const item = data[i];
             if (item && item.id === '') {
@@ -83,13 +83,15 @@ export class NgTableSelectFilterDsController {
         return isMatch;
     }
 
-    private getSelectListData($column: IColumnDef) {
+    private getSelectListData($column: ColumnDef) {
         const dataInput = $column.data;
-        if (dataInput instanceof Array) {
-            return this.$q.when(dataInput);
+        let result: IPromise<SelectOption[]> | SelectOption[] | undefined;
+        if (typeof dataInput === 'function') {
+            result = dataInput();
         } else {
-            return this.$q.when(dataInput && dataInput());
+            result = dataInput;
         }
+        return this.$q.when<SelectOption[] | undefined>(result);
     }
 }
 export { ngTableSelectFilterDs };

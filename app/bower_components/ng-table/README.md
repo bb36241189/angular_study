@@ -26,6 +26,8 @@ npm install ng-table@next --save
 
 You can download the distribution files directly from [unpkg](https://unpkg.com/ng-table/bundles/)
 
+**Bower**: NO LONGER SUPPORTED
+
 
 ## Getting started
 
@@ -109,3 +111,4 @@ See the [contributing](CONTRIBUTING.md) guidelines.
 ---
 
 This project is part of [Bazalt CMS](http://bazalt-cms.com/).
+
