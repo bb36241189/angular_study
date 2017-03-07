@@ -8,9 +8,9 @@ angular.module('angularStudyApp')
         var initVM = function ($scope) {
             $scope.vm = {
                 images : new NgTableParams({},{getData : function (params) {
-                    return $http.get('json/ngTable.json').success(function (datas) {
-                        return datas;
-                    }).error(function (msg) {
+                    return $http.get('json/ngTable.json').then(function (ret) {
+                        return ret.data;
+                    },function (msg) {
                         $log.error(msg);
                     });
                 }})

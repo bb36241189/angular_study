@@ -5,6 +5,14 @@
     <title></title>
 </head>
 <body>
+<form name="myForm">
+    <input type="text" ng-model="pwd" required name="pwd">
+    <input type="text" ng-model="repwd" required name="repwd" my-pwd-match="myForm.pwd">
 
+    <br/>
+    <text>验证成功(myForm.$valid):{{myForm.$valid}}</text><br/>
+    <text>验证失败(myForm.$invalid):{{myForm.$valid}}</text><br/>
+    <text>错误信息{myForm.$error}:{{myForm.$error}}</text>
+</form>
 </body>
 </html>

@@ -2,13 +2,15 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title ncy-breadcrumb-text="Sample app : {{ncyBreadcrumbChain}}"></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/angular-aside/dist/css/angular-aside.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -43,7 +45,15 @@
               <li class="active"><a href="#/">Home</a></li>
               <li><a ng-href="#/about">About</a></li>
               <li><a ng-href="#!/ngTable">ngTable</a></li>
+              <li><a ng-href="#!/ngAside">ngAside</a></li>
+              <li><a ng-href="#!/echarts">echarts</a></li>
+              <li><a ng-href="#!/ngModule">ngModule</a></li>
+              <li><a ng-href="#!/loadingBar">loadingBar</a></li>
               <li><a ng-href="#/">Contact</a></li>
+            </ul>
+            <br/>
+            <ul ncy-breadcrumb class="breadcrumb">
+
             </ul>
           </div>
         </div>
@@ -83,6 +93,10 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-aside/dist/js/angular-aside.js"></script>
+    <script src="bower_components/angular-breadcrumb/release/angular-breadcrumb.js"></script>
+    <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -91,6 +105,9 @@
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/ng-table.js"></script>
         <script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
+        <script src="scripts/controllers/ng-aside.js"></script>
+        <script src="scripts/controllers/ngModule.js"></script>
+        <script src="scripts/controllers/loading-bar.js"></script>
         <!-- endbuild -->
 </body>
 </html>
