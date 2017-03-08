@@ -1,0 +1,179 @@
+{
+  "message": "",
+  "code": "200",
+  "response": {
+    "permissions": [
+      {
+        "category": "镜像仓库",
+        "description": "镜像 pull",
+        "service_name": "registry",
+        "project_id": null,
+        "id": "0a80d44e58554d32ba35facc03b216da",
+        "name": "registry:pull"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用组修改",
+        "service_name": "app",
+        "project_id": null,
+        "id": "226c56a0d8dc41488add9c8087117f02",
+        "name": "group_update"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用重启",
+        "service_name": "app",
+        "project_id": null,
+        "id": "423bc296920442a187c2e7af42f17d1c",
+        "name": "restart"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用启动",
+        "service_name": "app",
+        "project_id": null,
+        "id": "4c7640b7b3ea440bbb1bfc6e7e266c50",
+        "name": "start"
+      },
+      {
+        "category": "持续集成",
+        "description": "读取持续集成项目列表",
+        "service_name": "ci_cd",
+        "project_id": null,
+        "id": "4f1dff8ddba648b19bcdf474f69ea547",
+        "name": "read-project-list"
+      },
+      {
+        "category": "镜像仓库",
+        "description": "push 公共镜像",
+        "service_name": "registry",
+        "project_id": null,
+        "id": "54ec9c550f65428fad2a5739ab76ccf3",
+        "name": "registry:library:push"
+      },
+      {
+        "category": "持续集成",
+        "description": "读取代码仓库帐号列表",
+        "service_name": "ci_cd",
+        "project_id": null,
+        "id": "681ed9f5230d45d99442fd12ebed74b8",
+        "name": "read-scm-account-list"
+      },
+      {
+        "category": "镜像仓库",
+        "description": "镜像 push",
+        "service_name": "registry",
+        "project_id": null,
+        "id": "70c53a5b42af4c27a32082229d8dcdbd",
+        "name": "registry:push"
+      },
+      {
+        "category": "持续集成",
+        "description": "创建持续集成项目",
+        "service_name": "ci_cd",
+        "project_id": null,
+        "id": "7bfd14e0e6ff4d348cb7bb197f56622a",
+        "name": "create-project"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用扩缩容",
+        "service_name": "app",
+        "project_id": null,
+        "id": "822540d7c89549beb39f7bbaaa23d747",
+        "name": "scale"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用修改",
+        "service_name": "app",
+        "project_id": null,
+        "id": "87211003d117499ba50dfa4945b58aca",
+        "name": "update"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用删除",
+        "service_name": "app",
+        "project_id": null,
+        "id": "9818e401caeb4dfc8f3c348ef9284eca",
+        "name": "delete"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用创建",
+        "service_name": "app",
+        "project_id": null,
+        "id": "984bf135f22e4b2490ff41d64498b8c2",
+        "name": "create"
+      },
+      {
+        "category": "镜像仓库",
+        "description": "镜像删除",
+        "service_name": "registry",
+        "project_id": null,
+        "id": "a2310e0ef3fb48e4be87bb9957afc8c7",
+        "name": "registry:delete"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用组删除",
+        "service_name": "app",
+        "project_id": null,
+        "id": "a2fb287c30a14c6f84003f3d3fbd7c66",
+        "name": "group_delete"
+      },
+      {
+        "category": "持续集成",
+        "description": "创建代码仓库帐号",
+        "service_name": "ci_cd",
+        "project_id": null,
+        "id": "a6c1744d66e3414d8121e49f66d8d4c1",
+        "name": "create-scm-account"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用列表",
+        "service_name": "app",
+        "project_id": null,
+        "id": "b9a0551a13a74f2385cc4ec41aace0ad",
+        "name": "list"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用暂停",
+        "service_name": "app",
+        "project_id": null,
+        "id": "c27e07bca8d742149e0fbb1faf305c84",
+        "name": "suspend"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用组列表",
+        "service_name": "app",
+        "project_id": null,
+        "id": "c3f0ac3770c44345a50bf0e246b83b0a",
+        "name": "group_list"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用组创建",
+        "service_name": "app",
+        "project_id": null,
+        "id": "ca97b2b1999541749f3727e69b5d283d",
+        "name": "group_create"
+      },
+      {
+        "category": "应用管理",
+        "description": "应用发布",
+        "service_name": "app",
+        "project_id": null,
+        "id": "d2d7fb0bfb404bf09cfec1bb018e37ef",
+        "name": "publish"
+      }
+    ],
+    "id": "22486b9748234eb3990696ee25b3c41d",
+    "name": "test"
+  },
+  "success": true
+}

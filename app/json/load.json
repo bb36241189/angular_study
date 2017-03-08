@@ -1,0 +1,98 @@
+{
+  "success" : true,
+  "code" : "000000",
+  "message" : "操作成功",
+  "response" : {
+    "gcloudUser" : {
+      "userId" : "65a4652a-b236-11e6-b453-b05ada3a7f82",
+      "userAccount" : "admin",
+      "userPwd" : "96e79218965eb72c92a549dd5a330112",
+      "roleType" : "0",
+      "departId" : "84c37b01-9b19-4340-84e3-15c984fe3fc2",
+      "departName" : "admin",
+      "roleId" : "0",
+      "roleName" : "超级管理员",
+      "lastLoginTime" : "2017-03-07 16:51:07",
+      "h3cId" : "b5014ff2fcd748d0b91c95d1b353879a",
+      "hcPwd" : "cloudos",
+      "hwAccount" : "daixianmeng_user",
+      "hwPwd" : "@wsx1qaz",
+      "hwUserType" : null,
+      "tenAntId" : "81cc455b2e9a4af3b6e74509390069b9",
+      "hwTenAntId" : "cb8db919f07747f9b75acb9f1fd6c30c"
+    },
+    "menuList" : [ {
+      "sonMenuList" : [ ],
+      "menuName" : "仪表盘",
+      "menuUrl" : "#/app/overview/list",
+      "menuLevel" : "1",
+      "picName" : "icon-home4",
+      "menuState" : "app.overview.list"
+    }, {
+      "sonMenuList" : [ {
+        "menuUrl" : "#/app/machines/list",
+        "roleType" : "2",
+        "menuId" : "fb73c909-b6d6-11e6-b5c1-005056bc32ac",
+        "menuState" : "app.machines.list",
+        "menuName" : "云主机"
+      }, {
+        "menuUrl" : "#/app/machines/group",
+        "roleType" : "2",
+        "menuId" : "00f0ebb7-b6d7-11e6-b5c1-005056bc32ac",
+        "menuState" : "app.machines.group",
+        "menuName" : "主机组"
+      }, {
+        "menuUrl" : "#/app/machines/flavor/tab1",
+        "roleType" : "2",
+        "menuId" : "dfe828ec-ba94-11e6-b5c1-005056bc32ac",
+        "menuState" : "app.machines.flavor",
+        "menuName" : "配置模板"
+      } ],
+      "menuName" : "云主机",
+      "menuUrl" : "",
+      "menuLevel" : "1",
+      "picName" : "icon-stack2",
+      "menuState" : "app.machines"
+    }, {
+      "sonMenuList" : [ ],
+      "menuName" : "镜像",
+      "menuUrl" : "#app/images/list/tab1",
+      "menuLevel" : "1",
+      "picName" : "icon-copy",
+      "menuState" : "app.images.list"
+    }, {
+      "sonMenuList" : [ ],
+      "menuName" : "网络",
+      "menuUrl" : "#/app/network/list/tab1",
+      "menuLevel" : "1",
+      "picName" : "icon-tree5",
+      "menuState" : "app.network.list"
+    }, {
+      "sonMenuList" : [ {
+        "menuUrl" : "#/app/global/depart",
+        "roleType" : "0",
+        "menuId" : "2492153e-b6d7-11e6-b5c1-005056bc32ac",
+        "menuState" : "app.global.depart",
+        "menuName" : "部门管理"
+      }, {
+        "menuUrl" : "#/app/global/users",
+        "roleType" : "1",
+        "menuId" : "291f979c-b6d7-11e6-b5c1-005056bc32ac",
+        "menuState" : "app.global.users",
+        "menuName" : "用户管理"
+      }, {
+        "menuUrl" : "#/app/global/roles",
+        "roleType" : "0",
+        "menuId" : "2cd1247e-b6d7-11e6-b5c1-005056bc32ac",
+        "menuState" : "app.global.roles",
+        "menuName" : "角色管理"
+      } ],
+      "menuName" : "系统设置",
+      "menuUrl" : "",
+      "menuLevel" : "1",
+      "picName" : "icon-users",
+      "menuState" : "app.global"
+    } ],
+    "menuPerm" : [ "/roles/query", "/network/query", "/image/query", "/users/query", "/server/query", "/serverGroups/query", "/flavor/query", "/depart/query", "/dashboard/query" ]
+  }
+}

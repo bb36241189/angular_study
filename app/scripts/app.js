@@ -32,5 +32,13 @@ angular
             templateUrl : 'views/ng-table.html',
             controller : 'TestNgTableController',
             controllerAs : 'TestNgTable'
-          });
+          }).state('http',{
+            url : '/http',
+            template : '<div></div>',
+            controller : 'TestHttpController'
+          }).state('permissions',{
+            url : '/permissions',
+            template : '<div></div>',
+            controller : 'PermissionsCollect'
+          })
   }]);
