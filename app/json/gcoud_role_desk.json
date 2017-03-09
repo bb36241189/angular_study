@@ -1,0 +1,76 @@
+{
+  "success" : true,
+  "code" : "000000",
+  "message" : "操作成功",
+  "response" : {
+    "menuPermList" : [ {
+      "noCheckedList" : [ ],
+      "time" : "2016-11-30 16:28:25",
+      "parMenuName" : "云主机",
+      "menuId" : "dfe828ec-ba94-11e6-b5c1-005056bc32ac",
+      "parMenuId" : "f64361e7-b6d6-11e6-b5c1-005056bc32ac",
+      "checkedList" : [ {
+        "permName" : "配置模板查看",
+        "permId" : "ed5bc60b-c825-11e6-b5c1-005056bc32ac"
+      } ],
+      "menuName" : "配置模板"
+    }, {
+      "noCheckedList" : [ ],
+      "time" : "2016-11-30 16:28:25",
+      "parMenuName" : "云主机",
+      "menuId" : "fb73c909-b6d6-11e6-b5c1-005056bc32ac",
+      "parMenuId" : "f64361e7-b6d6-11e6-b5c1-005056bc32ac",
+      "checkedList" : [ {
+        "permName" : "云主机查看",
+        "permId" : "4c55f5a3-c825-11e6-b5c1-005056bc32ac"
+      } ],
+      "menuName" : "云主机"
+    }, {
+      "noCheckedList" : [ ],
+      "time" : "2016-11-30 16:28:25",
+      "parMenuName" : "云主机",
+      "menuId" : "00f0ebb7-b6d7-11e6-b5c1-005056bc32ac",
+      "parMenuId" : "f64361e7-b6d6-11e6-b5c1-005056bc32ac",
+      "checkedList" : [ {
+        "permName" : "主机组查看",
+        "permId" : "bd1e4e98-c825-11e6-b5c1-005056bc32ac"
+      } ],
+      "menuName" : "主机组"
+    }, {
+      "noCheckedList" : [ {
+        "permName" : "镜像查看",
+        "permId" : "1abf83e6-c826-11e6-b5c1-005056bc32ac"
+      } ],
+      "time" : "2016-11-30 16:28:49",
+      "parMenuName" : "",
+      "menuId" : "0500226f-b6d7-11e6-b5c1-005056bc32ac",
+      "parMenuId" : "0",
+      "checkedList" : [ ],
+      "menuName" : "镜像"
+    }, {
+      "noCheckedList" : [ ],
+      "time" : "2016-11-30 16:29:00",
+      "parMenuName" : "",
+      "menuId" : "0b8e254c-b6d7-11e6-b5c1-005056bc32ac",
+      "parMenuId" : "0",
+      "checkedList" : [ {
+        "permName" : "网络查看",
+        "permId" : "2c013ae6-c826-11e6-b5c1-005056bc32ac"
+      } ],
+      "menuName" : "网络"
+    } ],
+    "role" : {
+      "roleId" : "3b4fe446-db3a-4951-a12c-e63542776a7e",
+      "roleName" : "ryf",
+      "roleType" : "2",
+      "createUserId" : "65a4652a-b236-11e6-b453-b05ada3a7f82",
+      "careteTime" : "2017-01-10 10:36:09",
+      "updateUserId" : null,
+      "updateTime" : null,
+      "delFlag" : "0",
+      "attr1" : null,
+      "attr2" : null,
+      "attr3" : null
+    }
+  }
+}

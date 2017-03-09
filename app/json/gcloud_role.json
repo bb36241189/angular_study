@@ -1,0 +1,81 @@
+{
+  "success" : true,
+  "code" : "000000",
+  "message" : "操作成功",
+  "response" : {
+    "pageSize" : 10,
+    "totalPage" : 1,
+    "totalResult" : 7,
+    "currentPage" : 1,
+    "currentResult" : 0,
+    "sortField" : null,
+    "requestUrl" : null,
+    "order" : null,
+    "data" : [ {
+      "createTime" : "2016.11.24",
+      "createUser" : "admin",
+      "status" : "正常",
+      "updateTime" : "2016.12.22",
+      "roleType" : "0",
+      "role" : "系统管理员",
+      "roleName" : "超级管理员",
+      "delFlag" : "0",
+      "roleId" : "0"
+    }, {
+      "createTime" : "2017.01.10",
+      "createUser" : "admin",
+      "status" : "正常",
+      "roleType" : "2",
+      "role" : "普通用户",
+      "roleName" : "ryf",
+      "delFlag" : "0",
+      "roleId" : "3b4fe446-db3a-4951-a12c-e63542776a7e"
+    }, {
+      "createTime" : "2017.01.06",
+      "createUser" : "admin",
+      "status" : "正常",
+      "roleType" : "0",
+      "role" : "系统管理员",
+      "roleName" : "系统管理员11",
+      "delFlag" : "0",
+      "roleId" : "596e1e5f-c97a-4627-ba6f-f2e9f1ef0246"
+    }, {
+      "createTime" : "2017.01.05",
+      "createUser" : "admin",
+      "status" : "正常",
+      "roleType" : "2",
+      "role" : "普通用户",
+      "roleName" : "test",
+      "delFlag" : "0",
+      "roleId" : "7cc01211-39f1-4c6c-a0c5-79a87f49b3be"
+    }, {
+      "createTime" : "2017.02.10",
+      "createUser" : "admin",
+      "status" : "正常",
+      "roleType" : "0",
+      "role" : "系统管理员",
+      "roleName" : "hyd",
+      "delFlag" : "0",
+      "roleId" : "a413c98e-89d7-4a88-9ce7-dc55093f0ba8"
+    }, {
+      "createTime" : "2017.01.06",
+      "createUser" : "admin",
+      "status" : "正常",
+      "roleType" : "0",
+      "role" : "系统管理员",
+      "roleName" : "系统管理员",
+      "delFlag" : "0",
+      "roleId" : "b379c367-6583-4dd4-bc3e-a5dfc8c9f3c8"
+    }, {
+      "createTime" : "2017.01.12",
+      "createUser" : "admin",
+      "status" : "正常",
+      "roleType" : "0",
+      "role" : "系统管理员",
+      "roleName" : "123213123123",
+      "delFlag" : "0",
+      "roleId" : "cb7e2e39-4f77-4aea-b001-d02c8d6b79ae"
+    } ],
+    "params" : null
+  }
+}
