@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular
+var app = angular
   .module('angularStudyApp', [
     'ngAnimate',
     'ngCookies',
@@ -40,5 +40,9 @@ angular
             url : '/permissions',
             template : '<div></div>',
             controller : 'PermissionsCollect'
+          }).state('permenusTree',{
+            url : '/permenusTree',
+            template : '<div permenus-tree="treeData" selectMode="3" select="select"></div>',
+            controller : 'TestPermenusTree'
           })
   }]);
