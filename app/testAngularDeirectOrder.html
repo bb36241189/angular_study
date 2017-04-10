@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title></title>
+    <script type="text/javascript" src="//cdn.bootcss.com/angular.js/1.6.0/angular.js"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+</head>
+<body ng-app="myApp">
+    <div class="test" test-directive-one></div>
+</body>
+    <script>
+        var app = angular.module('myApp',[]);
+        app.directive('testDirectiveOne', function () {
+            return {
+                compile : function (ele) {
+                    console.log('testDirectiveOne  compile');
+                    $(ele).append("<div test-directive-two></div>");
+//                    $(ele).attr('test-directive-two','1');
+                }
+            }
+        }).directive('testDirectiveTwo', function () {
+            return {
+                compile : function () {
+                    console.log('testDirectiveTwo  compile')
+                }
+            }
+        })
+    </script>
+</html>

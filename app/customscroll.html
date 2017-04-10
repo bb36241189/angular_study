@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<textarea readonly style="width: 100%;">
+    app.factory('MainClassFactory',[function () {
+    var CustomScroll;
+    (CustomScroll = function(ele){
+        var _this = this;_this.ele=ele?ele:window.document;
+        //加載
+        _this.load = function(){
+            $(_this.ele).find(".scroll").mCustomScrollbar({
+                scrollInertia:400,
+                theme:'default-thin'
+            });
+            $(_this.ele).find(".scroll-x").mCustomScrollbar({
+                scrollInertia:400,
+                theme:'default-thin',
+                axis:'x'
+            });
+            $(_this.ele).find(".scroll-xy").mCustomScrollbar({
+                scrollInertia:400,
+                theme:'default-thin',
+                axis:'xy'
+            });
+        };
+
+        //卸載
+        _this.download = function(){
+            $(_this.ele).find(".scroll").mCustomScrollbar("destroy");
+            $(_this.ele).find(".scroll-x").mCustomScrollbar("destroy");
+            $(_this.ele).find(".scroll-xy").mCustomScrollbar("destroy");
+        };
+
+        // 刷新滚动条状态
+        _this.update = function(){
+            $(_this.ele).find(".scroll").mCustomScrollbar("update");
+            $(_this.ele).find(".scroll-x").mCustomScrollbar("update");
+            $(_this.ele).find(".scroll-xy").mCustomScrollbar("update");
+        };
+
+        //重新加載
+        _this.reload = function(){
+            _this.download();
+            _this.load();
+        };
+    });
+    return {
+        CustomScroll : CustomScroll
+    }
+}]);
+</textarea>
+</body>
+</html>

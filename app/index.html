@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title ncy-breadcrumb-text="Sample app : {{ncyBreadcrumbChain}}"></title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1">
     <link rel="shortcut icon" href="/favicon.icon">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,6 +16,8 @@
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/angular-aside/dist/css/angular-aside.css" />
+    <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
@@ -66,42 +68,20 @@
                   <li><a ng-href="#!/http">Http</a></li>
                   <li><a ng-href="#!/permissions">permissions</a></li>
                   <li><a ng-href="#!/permenusTree">permenusTree</a></li>
-                    <li><a ng-href="#!/httpInterceptor">httpInterceptor</a></li>
+				  <li><a ng-href="#!/httpInterceptor">httpInterceptor</a></li>
+				  <li class="active"><a href="#/">Home</a></li>
+				  <li><a ng-href="#/about">About</a></li>
+				  <li><a ng-href="#!/ngTable">ngTable</a></li>
+				  <li><a ng-href="#!/ngAside">ngAside</a></li>
+				  <li><a ng-href="#!/echarts">echarts</a></li>
+				  <li><a ng-href="#!/ngModule">ngModule</a></li>
+				  <li><a ng-href="#!/loadingBar">loadingBar</a></li>
+				  <li><a ng-href="#/">Contact</a></li>
                 </ul>
               </div>
-              <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
-         <script>
-           !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
-           (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
-           r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
-           }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+            <ul ncy-breadcrumb class="breadcrumb">
 
-           ga('create', 'UA-XXXXX-X');
-           ga('send', 'pageview');
-        </script>
-
-        <!-- build:js(.) scripts/vendor.js -->
-        <!-- bower:js -->
-        <script src="bower_components/jquery/dist/jquery.js"></script>
-        <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="bower_components/angular-animate/angular-animate.js"></script>
-        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-        <script src="bower_components/angular-resource/angular-resource.js"></script>
-        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-        <script src="bower_components/angular-touch/angular-touch.js"></script>
-        <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-        <!-- endbower -->
-        <!-- endbuild -->
-
-            <!-- build:js({.tmp,app}) scripts/scripts.js -->
-            <script src="scripts/app.js"></script>
-            <script src="scripts/controllers/main.js"></script>
-            <script src="scripts/controllers/ng-table.js"></script>
-            <script src="scripts/controllers/http.js"></script>
-            <script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
-            <!-- endbuild -->
-            </div>
+            </ul>
           </div>
         </div>
 
@@ -118,7 +98,6 @@
     </div>
   </div>
 
-</body>
  <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
          <script>
            !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
@@ -131,37 +110,57 @@
         </script>
 
         <!-- build:js(.) scripts/vendor.js -->
-        <!-- bower:js -->
-        <script src="bower_components/jquery/dist/jquery.js"></script>
-        <script src="bower_components/angular/angular.js"></script>
-        <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="bower_components/angular-animate/angular-animate.js"></script>
-        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-        <script src="bower_components/angular-resource/angular-resource.js"></script>
-        <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-        <script src="bower_components/angular-touch/angular-touch.js"></script>
-        <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
-        <!-- endbower -->
-        <!-- endbuild -->
-
-            <!-- build:js({.tmp,app}) scripts/scripts.js -->
-            <script src="scripts/app.js"></script>
-            <script src="scripts/controllers/main.js"></script>
-            <script src="scripts/controllers/ng-table.js"></script>
-            <script src="scripts/controllers/http.js"></script>
-            <script src="scripts/controllers/permissions.js"></script>
-            <script src="scripts/controllers/testPermenusTree.js"></script>
-              <script src="scripts/controllers/httpInterceptor.js"></script>
-            <!--  ui-select -->
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.js"></script>
-
-            <script src="scripts/directive/permenusTree.js"></script>
-            <script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
-            <!-- endbuild -->
-        	<!--Tree-->
+	<!-- bower:js -->
+	<script src="bower_components/jquery/dist/jquery.js"></script>
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="bower_components/angular-animate/angular-animate.js"></script>
+	<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+	<script src="bower_components/angular-resource/angular-resource.js"></script>
+	<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+	<script src="bower_components/angular-touch/angular-touch.js"></script>
+	<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+	<!-- endbower -->
+	<!--Tree-->
 	<script type="text/javascript" src="lib/libraries/jquery_ui/core.min.js"></script>
 	<script type="text/javascript" src="lib/libraries/jquery_ui/effects.min.js"></script>
 	<script type="text/javascript" src="lib/libraries/jquery_ui/interactions.min.js"></script>
 	<script type="text/javascript" src="lib/trees/fancytree_all.min.js"></script>
 	<script type="text/javascript" src="lib/trees/fancytree_childcounter.js"></script>
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/angular-aside/dist/js/angular-aside.js"></script>
+    <script src="bower_components/angular-breadcrumb/release/angular-breadcrumb.js"></script>
+    <script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+	<!-- build:js({.tmp,app}) scripts/scripts.js -->
+	<script src="scripts/app.js"></script>
+	<script src="scripts/controllers/main.js"></script>
+	<script src="scripts/controllers/ng-table.js"></script>
+	<script src="scripts/controllers/http.js"></script>
+	<script src="scripts/controllers/permissions.js"></script>
+	<script src="scripts/controllers/testPermenusTree.js"></script>
+	<script src="scripts/controllers/httpInterceptor.js"></script>
+	<script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
+	<script src="scripts/controllers/ng-aside.js"></script>
+	<script src="scripts/controllers/ngModule.js"></script>
+	<script src="scripts/controllers/loading-bar.js"></script>
+	<script src="scripts/directive/permenusTree.js"></script>
+	<!--  ui-select -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-select/0.20.0/select.js"></script>
+
+	<!-- endbuild -->
+</body>
 </html>
